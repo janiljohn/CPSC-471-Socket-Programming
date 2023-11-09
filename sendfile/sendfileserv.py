@@ -30,9 +30,11 @@ def recvAll(sock, numBytes):
 
 	# The buffer
 	recvBuff = ""
+	recvBuff = bytes(fileData, 'utf-8')
 	
 	# The temporary buffer
 	tmpBuff = ""
+	tmpBuff = bytes(fileData, 'utf-8')
 	
 	# Keep receiving till all is received
 	while len(recvBuff) < numBytes:

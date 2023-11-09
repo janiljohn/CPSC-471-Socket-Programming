@@ -59,14 +59,15 @@ while True:
 	
 		# Prepend the size of the data to the
 		# file data.
-		fileData = dataSizeStr + fileData	
+		fileData = dataSizeStr + fileData
+		fileDateByt = bytes(fileData, 'utf-8')
 		
 		# The number of bytes sent
 		numSent = 0
 		
 		# Send the data!
 		while len(fileData) > numSent:
-			numSent += connSock.send(fileData[numSent:])
+			numSent += connSock.send(fileDateByt[numSent:])
 	
 	# The file has been read. We are done
 	else:
