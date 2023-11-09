@@ -52,13 +52,13 @@ def recvAll(sock, numBytes):
 # Accept connections forever
 while True:
 	
-	print "Waiting for connections..."
+	print( "Waiting for connections..." )
 		
 	# Accept connections
 	clientSock, addr = welcomeSock.accept()
 	
-	print "Accepted connection from client: ", addr
-	print "\n"
+	print( "Accepted connection from client: ", addr )
+	print( "\n" )
 	
 	# The buffer to all data received from the
 	# the client.
@@ -81,13 +81,13 @@ while True:
 	# Get the file size
 	fileSize = int(fileSizeBuff)
 	
-	print "The file size is ", fileSize
+	print( "The file size is ", fileSize )
 	
 	# Get the file data
 	fileData = recvAll(clientSock, fileSize)
 	
-	print "The file data is: "
-	print fileData
+	print( "The file data is: " )
+	print( fileData )
 		
 	# Close our side
 	clientSock.close()
