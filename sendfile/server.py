@@ -90,6 +90,7 @@ while True:
 
         while True:
             
+            fileObj = open(fileName, "r")
             fileData = fileObj.read(65536)
 
             if fileData:
