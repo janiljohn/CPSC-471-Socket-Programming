@@ -75,6 +75,7 @@ while True:
 
 
 print( "Sent ", numSent, " bytes." )
+print(connSock.getsockname()[1])
 	
 # Close the socket and the file
 connSock.close()

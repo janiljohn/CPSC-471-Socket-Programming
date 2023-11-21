@@ -49,6 +49,8 @@ def recvAll(sock, numBytes):
 		# Add the received bytes to the buffer
 		recvBuff += tmpBuff
 	
+	print(str(recvBuff))
+
 	return recvBuff
 		
 # Accept connections forever
