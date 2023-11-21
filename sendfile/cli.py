@@ -30,7 +30,7 @@ connSock.connect((serverAddr, serverPort))
 numSent = 0
 
 # The file data
-fileData = None
+fileData = ""
 
 
 def recvAll(sock, numBytes):
