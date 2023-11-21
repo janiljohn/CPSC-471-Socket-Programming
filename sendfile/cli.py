@@ -68,39 +68,53 @@ while True:
 
 		fileName = inputCmd[4:]
 		try:
-			fileObj = open(fileName, "r")
+			fileObj = open(fileName, "rb")
 		except:
 			print("File does not exist.")
+			continue
 			# break
+		fileSize = os.path.getsize(fileName)
+		fileSizeBytes = fileSize.to_bytes(10, byteorder='big')
 		
-		numSent = 0
+		#numSent = 0
 
-		fileDate = None
+		#fileDate = None
+		connSock.send(fileSizeBytes)
 
 		while True:
-
-			fileObj = open(fileName, "r")
 			fileData = fileObj.read(65536)
+			if not fileData:
+				break
+			numSent = 0
+			while len(fileData) > numSent:	
+				numSent += connSock.send(fileData[numSent:])
+		fileObj.close()
+		print("Sent",fileSize, "bytes")
 
-			if fileData:
-				dataSizeStr = str(len(fileData))
+		# while True:
 
-				while len(dataSizeStr) < 10:
-					dataSizeStr = "0" + dataSizeStr
+		# 	fileObj = open(fileName, "r")
+		# 	fileData = fileObj.read(65536)
 
-				fileData = dataSizeStr + fileData
-				fileDateByt = bytes(fileData, 'utf-8')
+		# 	if fileData:
+		# 		dataSizeStr = str(len(fileData))
 
-				numSent = 0
+		# 		while len(dataSizeStr) < 10:
+		# 			dataSizeStr = "0" + dataSizeStr
 
-				while len(fileData) > numSent:
-					numSent += connSock.send(fileDateByt[numSent:])
+		# 		fileData = dataSizeStr + fileData
+		# 		fileDateByt = bytes(fileData, 'utf-8')
 
-			else:
-				fileObj.close()
-				# break
+		# 		numSent = 0
 
-		print( "Sent ", numSent, " bytes." )
+		# 		while len(fileData) > numSent:
+		# 			numSent += connSock.send(fileDateByt[numSent:])
+
+		# 	else:
+		# 		fileObj.close()
+		# 		# break
+
+		# print( "Sent ", numSent, " bytes." )
 
 	elif(inputCmd[0:3] == 'get'):
 		inputCmd = bytes(inputCmd, 'utf-8')
