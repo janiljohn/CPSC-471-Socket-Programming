@@ -148,7 +148,8 @@ while True:
 		fileSizeBuff = recvAll(connSock, 10)
 		fileSize = int(fileSizeBuff)
 		fileData = recvAll(connSock, fileSize)
-		print(fileData)
+		fileDataStr = fileData.decode('utf-8')
+		print(fileDataStr)
 
 	elif(inputCmd[0:4] == 'quit'):
 		break

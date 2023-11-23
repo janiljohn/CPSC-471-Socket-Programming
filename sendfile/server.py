@@ -146,6 +146,7 @@ while True:
 
             # Split the output into lines and iterate over them
             sendDate = ""
+            fileData = ""
             dataSize = 0
             for line in result.stdout.split('\n'):
                 sendDate = sendDate + str(line) + "\n"
