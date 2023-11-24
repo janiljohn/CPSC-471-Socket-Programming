@@ -56,6 +56,7 @@ while True:
     print( "\n" )
 	
     data = clientSock.recv(1024).decode()
+    print(data)
 	
     if(data[0:3] == 'put'):
         fileData = ""
@@ -63,8 +64,10 @@ while True:
         fileSize = 0
         fileSizeBuff = ""
 		
+        print("Before buff size")
         fileSizeBuff = recvAll(clientSock, 10)
-			
+        print("After buff size")
+
         fileSize = int(fileSizeBuff)
 		
         print ("The file size is ", fileSize)
@@ -90,7 +93,7 @@ while True:
 
         while True:
             
-            fileObj = open(fileName, "r")
+            # fileObj = open(fileName, "r")
             fileData = fileObj.read(65536)
 
             if fileData:
@@ -105,45 +108,20 @@ while True:
 
                 while len(fileData) > numSent:
                     numSent += clientSock.send(fileData[numSent:].encode())
+                    print(len(fileData), numSent)
 
             else:
                 fileObj.close()
-                # break
+                break
 
         print( "Sent ", numSent, " bytes." )
 
     elif(data[0:2] == 'ls'):
-        # for line in subprocess.call(["ls", "-l"]):
-        #     print(line)
-        # #get the size of this output
-        # dataSize = str(len(str(line)))
-        # #make that output's size to 10 bytes
-        # while len(dataSize) < 10:
-        #     dataSize = "0" + dataSize
-
-        # #send it back to the client with the file size
-        # clientSock.send(dataSize + str(line))
-
         # Run the command and capture the output
         result = subprocess.run(['ls', '-l'], stdout=subprocess.PIPE, text=True)
 
         # Check if the command was successful
         if result.returncode == 0:
-            
-            # # Split the output into lines and iterate over them
-            # for line in result.stdout.split('\n'):
-            #     print(line)
-            # #get the size of this output
-            # dataSize = str(len(str(line)))
-            # #make that output's size to 10 bytes
-            # while len(dataSize) < 10:
-            #     dataSize = "0" + dataSize
-
-            # #send it back to the client with the file size
-            # sendResult = dataSize + str(line)
-            # sendResult = bytes(sendResult, 'utf-8')
-            # clientSock.send(sendResult)
-
             # Split the output into lines and iterate over them
             sendDate = ""
             fileData = ""

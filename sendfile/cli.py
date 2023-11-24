@@ -8,6 +8,7 @@
 import socket
 import os
 import sys
+import subprocess
 
 # Command line checks 
 if len(sys.argv) < 2:
@@ -19,18 +20,20 @@ serverAddr = str(sys.argv[1])
 # Server port
 serverPort = int(sys.argv[2])
 
-
-# Create a TCP socket
-connSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-# Connect to the server
-connSock.connect((serverAddr, serverPort))
-
 # The number of bytes sent
 numSent = 0
 
 # The file data
 fileData = ""
+
+def restartConn():
+	# Create a TCP socket
+	connSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+	# Connect to the server
+	connSock.connect((serverAddr, serverPort))
+
+	return connSock
 
 
 def recvAll(sock, numBytes):
@@ -58,66 +61,58 @@ def recvAll(sock, numBytes):
 
 	return recvBuff
 
+isInvalidArg = False
 
 # Keep sending until all is sent
 while True:
 
+	if isInvalidArg == False:
+		connSock = restartConn()
+
 	inputCmd = input("ftp> ")
 
 	if(inputCmd[0:3] == 'put'):
-
+		isInvalidArg = False
 		fileName = inputCmd[4:]
 		try:
-			fileObj = open(fileName, "rb")
+			fileObj = open(fileName, "r")
 		except:
 			print("File does not exist.")
-			continue
 			# break
-		fileSize = os.path.getsize(fileName)
-		fileSizeBytes = fileSize.to_bytes(10, byteorder='big')
-		
-		#numSent = 0
 
-		#fileDate = None
-		connSock.send(fileSizeBytes)
+		numSent = 0
+		fileData = None
+
+		connSock.send(bytes('put', 'utf-8'))
 
 		while True:
+
 			fileData = fileObj.read(65536)
-			if not fileData:
+
+			if fileData:
+				dataSizeStr = str(len(fileData))
+
+				while len(dataSizeStr) < 10:
+					dataSizeStr = "0" + dataSizeStr
+
+				fileData = dataSizeStr + fileData
+				fileDataByt = bytes(fileData, 'utf-8')
+
+				numSent = 0
+
+				while len(fileData) > numSent:
+					numSent += connSock.send(fileDataByt[numSent:])
+
+			else:
+				fileObj.close()
 				break
-			numSent = 0
-			while len(fileData) > numSent:	
-				numSent += connSock.send(fileData[numSent:])
-		fileObj.close()
-		print("Sent",fileSize, "bytes")
 
-		# while True:
-
-		# 	fileObj = open(fileName, "r")
-		# 	fileData = fileObj.read(65536)
-
-		# 	if fileData:
-		# 		dataSizeStr = str(len(fileData))
-
-		# 		while len(dataSizeStr) < 10:
-		# 			dataSizeStr = "0" + dataSizeStr
-
-		# 		fileData = dataSizeStr + fileData
-		# 		fileDateByt = bytes(fileData, 'utf-8')
-
-		# 		numSent = 0
-
-		# 		while len(fileData) > numSent:
-		# 			numSent += connSock.send(fileDateByt[numSent:])
-
-		# 	else:
-		# 		fileObj.close()
-		# 		# break
-
-		# print( "Sent ", numSent, " bytes." )
+		print( "Sent ", numSent, " bytes." )
 
 	elif(inputCmd[0:3] == 'get'):
+		isInvalidArg = False
 		inputCmd = bytes(inputCmd, 'utf-8')
+		print(inputCmd)
 		connSock.send(inputCmd)
 		fileData = ""
 		recvBuff = ""
@@ -129,20 +124,16 @@ while True:
 		fileData = recvAll(connSock, fileSize)
 		print( "The file data is: " )
 		print( fileData )
+		# connSock.close()
 
-	elif(inputCmd[0:3] == 'ls'):
-		# command = 'ls'
-		# command = bytes(command, 'utf-8')
-		# connSock.send(command)
-		# mySize = recvAll(connSock, 10)
-		# sizeData = recvAll(connSock, int(mySize))
-		# print(sizeData)
-
+	elif(inputCmd[0:2] == 'ls'):
+		isInvalidArg = False
 		command = 'ls'
 		command = bytes(command, 'utf-8')
 		connSock.send(command)
 
 		recvBuff = ""
+		fileData = ""
 		fileSize = 0
 		fileSizeBuff = ""
 		fileSizeBuff = recvAll(connSock, 10)
@@ -150,15 +141,17 @@ while True:
 		fileData = recvAll(connSock, fileSize)
 		fileDataStr = fileData.decode('utf-8')
 		print(fileDataStr)
+		# connSock.close()
 
 	elif(inputCmd[0:4] == 'quit'):
+		isInvalidArg = False
 		break
 	
 	# The file has been read. We are done
 	else:
+		isInvalidArg = True
 		print("Invalid command.")
 
 	
 # Close the socket and the file
 connSock.close()
-	
