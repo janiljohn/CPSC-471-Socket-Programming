@@ -45,6 +45,31 @@ def recvAll(sock, numBytes):
 
 	return recvBuff
 
+def createFile(content):
+    content = str(content, 'UTF-8')
+    fileNameStartIdx = content.find("nameOfFile//") + 12
+    fileNameEndIdx = content.find("//nameOfFile")
+    fileName = content[fileNameStartIdx : fileNameEndIdx]
+    fileName = fileName[fileName.rfind("/")+1:]
+
+    try:
+        f = open(fileName, "x")
+    except:
+        iter = 1
+        while True:
+            newFileName = fileName + " (" + str(iter) + ")"
+            print(newFileName)
+            try:
+                f = open(newFileName, "x")
+                break
+            except:
+                 iter += 1
+        
+    # f = open(fileName, "x")
+    content = content[fileNameEndIdx+12:]
+    f.write(content)
+    f.close()
+
 while True:
 	
     print( "Waiting for connections..." )
@@ -56,7 +81,6 @@ while True:
     print( "\n" )
 	
     data = clientSock.recv(1024).decode()
-    print(data)
 	
     if(data[0:3] == 'put'):
         fileData = ""
@@ -64,9 +88,7 @@ while True:
         fileSize = 0
         fileSizeBuff = ""
 		
-        print("Before buff size")
         fileSizeBuff = recvAll(clientSock, 10)
-        print("After buff size")
 
         fileSize = int(fileSizeBuff)
 		
@@ -75,6 +97,7 @@ while True:
         fileData = recvAll(clientSock, fileSize)
 
         print ("The file data is: ")
+        createFile(fileData)
         print (fileData)
 		
     elif(data[0:3] == 'get'):
@@ -108,7 +131,6 @@ while True:
 
                 while len(fileData) > numSent:
                     numSent += clientSock.send(fileData[numSent:].encode())
-                    print(len(fileData), numSent)
 
             else:
                 fileObj.close()
@@ -136,7 +158,6 @@ while True:
 
             #send it back to the client with the file size
             fileData = dataSize + sendDate
-            print(fileData)
             fileDataByt = bytes(fileData, 'utf-8')
 
             numSent = 0
@@ -150,7 +171,4 @@ while True:
         break
 
 clientSock.close()
-
-
-
 

@@ -74,57 +74,76 @@ while True:
 	if(inputCmd[0:3] == 'put'):
 		isInvalidArg = False
 		fileName = inputCmd[4:]
+		validFile = True
 		try:
 			fileObj = open(fileName, "r")
 		except:
 			print("File does not exist.")
+			validFile = False
+			isInvalidArg = True
 			# break
 
-		numSent = 0
-		fileData = None
+		if validFile:
+			numSent = 0
+			fileData = None
 
-		connSock.send(bytes('put', 'utf-8'))
+			connSock.send(bytes('put', 'utf-8'))
 
-		while True:
+			addNameFlag = True
+			fileData = "nameOfFile//" + fileName + "//nameOfFile"
+			
+			while True:
 
-			fileData = fileObj.read(65536)
+				if addNameFlag:
+					fileData = fileData + fileObj.read(65536)
+					addNameFlag = False
+				else:
+					fileData = fileObj.read(65536)
 
-			if fileData:
-				dataSizeStr = str(len(fileData))
+				if fileData:
+					dataSizeStr = str(len(fileData))
 
-				while len(dataSizeStr) < 10:
-					dataSizeStr = "0" + dataSizeStr
+					while len(dataSizeStr) < 10:
+						dataSizeStr = "0" + dataSizeStr
 
-				fileData = dataSizeStr + fileData
-				fileDataByt = bytes(fileData, 'utf-8')
+					fileData = dataSizeStr + fileData
+					fileDataByt = bytes(fileData, 'utf-8')
 
-				numSent = 0
+					numSent = 0
 
-				while len(fileData) > numSent:
-					numSent += connSock.send(fileDataByt[numSent:])
+					while len(fileData) > numSent:
+						numSent += connSock.send(fileDataByt[numSent:])
 
-			else:
-				fileObj.close()
-				break
+				else:
+					fileObj.close()
+					break
 
-		print( "Sent ", numSent, " bytes." )
+			print( "Sent ", numSent, " bytes." )
 
 	elif(inputCmd[0:3] == 'get'):
 		isInvalidArg = False
-		inputCmd = bytes(inputCmd, 'utf-8')
-		print(inputCmd)
-		connSock.send(inputCmd)
-		fileData = ""
-		recvBuff = ""
-		fileSize = 0
-		fileSizeBuff = ""
-		fileSizeBuff = recvAll(connSock, 10)
-		fileSize = int(fileSizeBuff)
-		print( "The file size is ", fileSize )
-		fileData = recvAll(connSock, fileSize)
-		print( "The file data is: " )
-		print( fileData )
-		# connSock.close()
+		validFile = True
+		try:
+			fileObj = open(inputCmd[4:], "r")
+		except:
+			print("File does not exist.")
+			validFile = False
+			isInvalidArg = True
+		if validFile:
+			inputCmd = bytes(inputCmd, 'utf-8')
+			print(inputCmd)
+			connSock.send(inputCmd)
+			fileData = ""
+			recvBuff = ""
+			fileSize = 0
+			fileSizeBuff = ""
+			fileSizeBuff = recvAll(connSock, 10)
+			fileSize = int(fileSizeBuff)
+			print( "The file size is ", fileSize )
+			fileData = recvAll(connSock, fileSize)
+			print( "The file data is: " )
+			print( fileData )
+			# connSock.close()
 
 	elif(inputCmd[0:2] == 'ls'):
 		isInvalidArg = False
