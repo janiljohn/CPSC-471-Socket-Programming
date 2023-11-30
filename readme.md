@@ -15,12 +15,16 @@ This project is implemented in Python and involves a server-client architecture.
    - Execute the `server.py` file to start the server.
      ```bash
      python server.py
+     # or
+     python3 server.py
      ```
 
 2. **Establish Connection to Server:**
    - Run the `cli.py` file to establish a connection to the server.
      ```bash
      python cli.py localhost 1234
+     # or
+     python3 cli.py localhost 1234
      ```
    - Replace `localhost` with the server address and `1234` with the port number if needed.
 
