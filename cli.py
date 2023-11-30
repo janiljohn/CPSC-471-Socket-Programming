@@ -131,7 +131,6 @@ while True:
 			isInvalidArg = True
 		if validFile:
 			inputCmd = bytes(inputCmd, 'utf-8')
-			print(inputCmd)
 			connSock.send(inputCmd)
 			fileData = ""
 			recvBuff = ""
@@ -139,10 +138,10 @@ while True:
 			fileSizeBuff = ""
 			fileSizeBuff = recvAll(connSock, 10)
 			fileSize = int(fileSizeBuff)
-			print( "The file size is ", fileSize )
+			print( "The file size is: ", fileSize )
 			fileData = recvAll(connSock, fileSize)
 			print( "The file data is: " )
-			print( fileData )
+			print(str(fileData, 'utf-8'))
 			# connSock.close()
 
 	elif(inputCmd[0:2] == 'ls'):

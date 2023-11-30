@@ -1,2 +1,0 @@
-python cli.py localhost 1234
-python server.py
