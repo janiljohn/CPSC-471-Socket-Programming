@@ -4,8 +4,8 @@
 - Joel Anil John (Email: joel.aniljohn@csu.fullerton.edu)
 - Indrajeet Patwardhan (Email: Indrajeet2002@csu.fullerton.edu)
 - Danyal Nemati (Email: dnemati@csu.fullerton.edu)
-- Zeid
-- (Email: abeo@csu.fullerton.edu)
+- Abe Oueichek (Email: abeo@csu.fullerton.edu)
+- Zeid Zawaideh
 
 ## Project Overview:
 This project is implemented in Python and involves a server-client architecture.
