@@ -16,7 +16,9 @@ This project is implemented in Python and involves a server-client architecture.
    - Execute the `server.py` file to start the server.
      ```bash
      python server.py
-     # or
+     ```
+     or
+     ```bash
      python3 server.py
      ```
 
@@ -24,7 +26,9 @@ This project is implemented in Python and involves a server-client architecture.
    - Run the `cli.py` file to establish a connection to the server. Specify the server address and the server portnumber as arguments like shown below:
      ```bash
      python cli.py localhost 1234
-     # or
+     ```
+     or
+     ```bash
      python3 cli.py localhost 1234
      ```
    - Replace `localhost` with the server address and `1234` with the port number if needed.
@@ -34,7 +38,7 @@ This project is implemented in Python and involves a server-client architecture.
      ```bash
      get <file name> (downloads file <file name> from the server)
      put <filename> (uploads file <file name> to the server)
-     ls(lists files on theserver)
+     ls (lists files on theserver)
      quit (disconnects from the server and exits)
      ```
 
@@ -43,6 +47,8 @@ This project is implemented in Python and involves a server-client architecture.
    - Make sure to specify the director that these files are in before using them. For example:
    ```bash
    put ./sendfile/file.txt
-   # or
+   ```
+   or
+   ```bash
    put ./sendfile/test.txt
    ```
