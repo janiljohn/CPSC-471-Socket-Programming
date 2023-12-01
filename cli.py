@@ -1,10 +1,3 @@
-
-# *******************************************************************
-# This file illustrates how to send a file using an
-# application-level protocol where the first 10 bytes
-# of the message from client to server contain the file
-# size and the rest contain the file data.
-# *******************************************************************
 import socket
 import os
 import sys
@@ -81,7 +74,6 @@ while True:
 			print("File does not exist.")
 			validFile = False
 			isInvalidArg = True
-			# break
 
 		if validFile:
 			numSent = 0
@@ -142,7 +134,6 @@ while True:
 			fileData = recvAll(connSock, fileSize)
 			print( "The file data is: " )
 			print(str(fileData, 'utf-8'))
-			# connSock.close()
 
 	elif(inputCmd[0:2] == 'ls'):
 		isInvalidArg = False
@@ -159,7 +150,6 @@ while True:
 		fileData = recvAll(connSock, fileSize)
 		fileDataStr = fileData.decode('utf-8')
 		print(fileDataStr)
-		# connSock.close()
 
 	elif(inputCmd[0:4] == 'quit'):
 		isInvalidArg = False

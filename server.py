@@ -1,10 +1,3 @@
-
-# *****************************************************
-# This file implements a server for receiving the file
-# sent using sendfile(). The server receives a file and
-# prints it's contents.
-# *****************************************************
-
 import socket
 import subprocess
 
@@ -64,8 +57,7 @@ def createFile(content):
                 break
             except:
                  iter += 1
-        
-    # f = open(fileName, "x")
+
     content = content[fileNameEndIdx+12:]
     f.write(content)
     f.close()
@@ -108,7 +100,6 @@ while True:
             fileObj = open(fileName, "r")
         except:
             print("File does not exist.")
-            # break
             
         numSent = 0
 
@@ -116,7 +107,6 @@ while True:
 
         while True:
             
-            # fileObj = open(fileName, "r")
             fileData = fileObj.read(65536)
 
             if fileData:
